@@ -19,19 +19,20 @@ const StackTabButtom = () => {
     <Tab.Navigator
 
       screenOptions={({ route }) => ({
+
+        tabBarActiveTintColor: '#8e8e8e',
+        tabBarInactiveTintColor: '#8e8e8e',
+
         tabBarIcon: ({ color, size, focused }) => {
 
           let iconName = '';
 
           if (route.name === 'Inicio') {
-            iconName = 'home-outline';
-            color = focused ? '#0542bc' : '#8e8e8e';
+            iconName = focused ? 'home-sharp' : 'home-outline';
           } else if (route.name === 'Catálogo') {
-            iconName = 'book-outline';
-            color = focused ? '#0542bc' : '#8e8e8e';
+            iconName = focused ? 'book-sharp' : 'book-outline';
           } else if (route.name === 'Contacto') {
-            iconName = 'person-outline';
-            color = focused ? '#0542bc' : '#8e8e8e';
+            iconName = focused ? 'person-sharp' : 'person-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -47,7 +48,7 @@ const StackTabButtom = () => {
           tabBarLabel: ({ focused }) =>
             <Text style={{
               fontSize: focused ? 12 : 12,
-              color: focused ? '#0542bc' : '#8e8e8e', // Cambia el color del texto cuando la pestaña está enfocada
+              color: focused ? '#8e8e8e' : '#8e8e8e', // Cambia el color del texto cuando la pestaña está enfocada
             }}>
               Inicio
             </Text>
@@ -61,7 +62,7 @@ const StackTabButtom = () => {
           tabBarLabel: ({ focused }) =>
             <Text style={{
               fontSize: focused ? 12 : 12,
-              color: focused ? '#0542bc' : '#8e8e8e', // Cambia el color del texto cuando la pestaña está enfocada
+              color: focused ? '#8e8e8e' : '#8e8e8e', // Cambia el color del texto cuando la pestaña está enfocada
             }}>
               Catálogo
             </Text>
@@ -76,7 +77,7 @@ const StackTabButtom = () => {
           tabBarLabel: ({ focused }) =>
             <Text style={{
               fontSize: focused ? 12 : 12,
-              color: focused ? '#0542bc' : '#8e8e8e', // Cambia el color del texto cuando la pestaña está enfocada
+              color: focused ? '#686689' : '#8e8e8e', // Cambia el color del texto cuando la pestaña está enfocada
             }}>
               Contacto
             </Text>
