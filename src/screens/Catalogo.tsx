@@ -1,178 +1,176 @@
-import React from 'react';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { TouchableOpacity, StyleSheet, Text, View, ScrollView, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Text, View, Image, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import CustomHeader from '../components/CustomHeader';
 
 type RootStackParamList = {
   Catalogo: undefined;
-  CategoriaUno: undefined;
-  CategoriaDos: undefined;
-  CategoriaTres: undefined;
-  CategoriaCuatro: undefined;
 };
+
+
+
 type CatalogoProps = NativeStackScreenProps<RootStackParamList, 'Catalogo'>;
 
-const Catalogo = ({ navigation }: CatalogoProps) => {
-  return (
-
-    // "contentContainerStyle" en contenedor "ScrollView" con "flexGrow: 1" solucionan errores de Scroll
-    <>
-      <CustomHeader navigation={navigation} title="Catálogo" />
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.contentCatalog}>
-          <View style={styles.catalog}>
-
-            <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('CategoriaUno')}>
-              <View style={styles.contentIconCatalogo1}>
-                <Ionicons style={styles.iconCatalogo} name="hand-left-outline" />
-              </View>
-              <Text style={styles.textCategory}>Máquinas tragamonedas</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('CategoriaDos')}>
-              <View style={styles.contentIconCatalogo2}>
-                <Ionicons style={styles.iconCatalogo} name="planet-outline" />
-              </View>
-              <Text style={styles.textCategory}>Gabinetes electrónicos</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('CategoriaTres')}>
-              <View style={styles.contentIconCatalogo3}>
-                <Ionicons style={styles.iconCatalogo} name="gift-outline" />
-              </View>
-              <Text style={styles.textCategory}>Terminales de apuestas</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('CategoriaCuatro')}>
-              <View style={styles.contentIconCatalogo4}>
-                <Ionicons style={styles.iconCatalogo} name="beer-outline" />
-              </View>
-              <Text style={styles.textCategory}>Máquinas expendedoras</Text>
-            </TouchableOpacity>
-            
-          </View>
-
-        </View>
-
-      </ScrollView>
-
-    </>
-
-  );
-
+type Maquina = {
+  _id:string;
+  imagen: string;
+  nombre: string;
+  estado: string;
+  referencia: string;
+  descripcion: string;
 };
 
-export default Catalogo;
+const Catalogo = ({ navigation }: CatalogoProps) => {
+  const initialUrl = 'https://novoticp1.onrender.com/api/producto/obtenerProducto';
+ 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [allCharacters, setAllCharacters] = useState<Maquina[]>([]);
+  const [filteredCharacters, setFilteredCharacters] = useState<Maquina[]>([]);
+  
 
-// **** Estilos CSS ****
+  useEffect(() => {
+    fetch(initialUrl)
+      .then(response => response.json())
+      .then(data => {
+        setAllCharacters(data);
+        filterCharacters(data, searchTerm); // Filtra los datos una vez cargados
+      })
+      .catch(error => console.log(error));
+  }, []);
+
+  const filterCharacters = (characters: Maquina[], query: string) => {
+    const filtered = characters.filter(character =>
+      Object.values(character).some(value =>
+        value.toString().toLowerCase().includes(query.toLowerCase().trim())
+        
+      ) &&
+      character.estado.toLowerCase() === 'activo'
+    );
+    setFilteredCharacters(filtered); // Actualiza el estado con los datos filtrados
+  };
+
+  const handleSearchTermChange = (text: string) => {
+    setSearchTerm(text);
+    filterCharacters(allCharacters, text); // Filtra los datos almacenados en allCharacters
+  };
+  
+  
+
+  return (
+    <>
+    
+      <CustomHeader navigation={navigation} title="Catálogo" />
+      <View style={styles.contentContainerR}>
+      <View style={[styles.searchContainer, ]}>
+        <TextInput
+         placeholder="Buscar Máquina"
+         style={[styles.searchInput]}
+         placeholderTextColor="#ccc" // Aquí puedes establecer el color gris que desees
+         value={searchTerm}
+         onChangeText={handleSearchTermChange}
+        />
+        <TouchableOpacity style={styles.searchIconContainer} onPress={() => filterCharacters(allCharacters, searchTerm)}>
+          <Ionicons name="search" size={24} color="white" />
+        </TouchableOpacity>
+      </View>
+      </View>
+      <ScrollView>
+      <ScrollView>
+  <View style={styles.contentContainer}>
+    {filteredCharacters.length === 0 ? (
+      <Text style={styles.noResultsText}>No se encuentraron resultados</Text>
+    ) : (
+      filteredCharacters.map((character, index) => (
+        <View key={index} style={styles.cardContainer}>
+          <Image source={{ uri: `https://novoticp1.onrender.com/api/producto/obtener-imagen-producto/${character._id}` }} style={styles.cardImage} />
+          <Text style={styles.cardText}>{character.nombre}</Text>
+          {/* <Text style={styles.cardDescription}> Estado: {character.estado}</Text> */}
+          <Text style={styles.cardDescription}> Referencia: {character.referencia}</Text>
+          <Text style={styles.cardDescription}>  {character.descripcion}</Text>
+        </View>
+      ))
+    )}
+  </View>
+</ScrollView>
+
+      </ScrollView>
+    </>
+  );
+};
+
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
+  contentContainer: {
+    flex: 1,
     backgroundColor: '#ffffff',
   },
-  contentImgCatalogo: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    marginTop: 10,
-    aspectRatio: 1 * 1.67, // Convertir pixeles de imágen a "Relación Aspecto" 
-    backgroundColor: '#00000000',
-  },
-  imgCatalogo: {
-    width: '90%',
-    height: '90%',
-    resizeMode: 'cover',
-    borderRadius: 15,
-  },
-  contentCatalog: {
+  cardContainer: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#00000000',
+    textAlign: 'justify',
+    //alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#E9EFF5',
+    borderRadius: 5,
+    margin: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    
   },
-  catalog: {
-    flexDirection: 'row', // Posisiona elementos en fila
-    flexWrap: 'wrap', // Posiciona elementos horixontalmente en varias filas
-    justifyContent: 'center',
-    backgroundColor: '#00000000',
+  cardImage: {
+    width: '100%',
+    height: 200,
+    resizeMode: 'cover',
+    borderRadius: 5,
   },
-  contentCategory: {
-    width: 110,
-    alignItems: 'center',
-    marginHorizontal: 6,
-    marginVertical: 40,
+  cardText: {
+    fontSize: 24,
+    color: '#666',
+    padding: 20,
+    textAlign: 'justify'
   },
-  textCategory: {
-    fontFamily: 'Futura PT Medium',
-    color: '#7e7e7e',
+  cardDescription: {
     fontSize: 16,
-    marginTop: 10,
-    fontWeight: '500',
+    color: '#666',
+    padding: 20,
+    textAlign: 'justify',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    //alignItems: 'center',
+   
+  },
+  contentContainerR: {
+    padding: 10,
+     backgroundColor: '#ffffff',
+  },
+  searchInput: {
+    flex: 1,
+    height: 40,
+    borderWidth: 2,
+    borderColor: '#aea9a9',
+    borderRadius: 20,
+    padding: 10,
+    color: '#000',
+  },
+  searchIconContainer: {
+    backgroundColor: '#a5a3a3',
+    borderRadius: 20,
+    marginLeft: 9,
+    padding: 9,
+    
+  },
+  noResultsText: {
+    fontSize: 13,
+    color: '#868585',
     textAlign: 'center',
-  },
-  contentIconCatalogo1: {
-    width: 80,
-    height: 80,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // backgroundColor: '#d7c6f7',
-    borderColor: '#d3d3d3',
-    borderWidth: 1,
-    borderRadius: 15,
-  },
-  contentIconCatalogo2: {
-    width: 80,
-    height: 80,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // backgroundColor: '#b7fadf',
-    borderColor: '#d3d3d3',
-    borderWidth: 1,
-    borderRadius: 15,
-  },
-  contentIconCatalogo3: {
-    width: 80,
-    height: 80,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // backgroundColor: '#fed2e5',
-    borderColor: '#d3d3d3',
-    borderWidth: 1,
-    borderRadius: 15,
-  },
-  contentIconCatalogo4: {
-    width: 80,
-    height: 80,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // backgroundColor: '#c3e8ff',
-    borderColor: '#d3d3d3',
-    borderWidth: 1,
-    borderRadius: 15,
-  },
-  contentIconCatalogo5: {
-    width: 80,
-    height: 80,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // backgroundColor: '#fffec2',
-    borderColor: '#d3d3d3',
-    borderWidth: 1,
-    borderRadius: 15,
-  },
-  contentIconCatalogo6: {
-    width: 80,
-    height: 80,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // backgroundColor: '#ffc4b7',
-    borderColor: '#d3d3d3',
-    borderWidth: 1,
-    borderRadius: 15,
-  },
-  iconCatalogo: {
-    fontSize: 35,
-    color: '#5e5e5e',
+    marginTop: 4, // Espacio superior para separar del contenido anterior
   },
 });
+
+export default Catalogo;

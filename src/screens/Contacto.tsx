@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, Image, Linking } from 'react-native';
 import CustomHeader from '../components/CustomHeader';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -12,7 +12,32 @@ type ContactoProps = NativeStackScreenProps<RootStackParamList, 'Contacto'>;
 
 const Contacto = ({ navigation }: ContactoProps) => {
 
+  const openGoogleMaps = () => {
+    // Abrir Google Maps con la ubicación
+    // Reemplaza las coordenadas con las de tu ubicación
+    const latitude = 'LATITUDE';
+    const longitude = 'LONGITUDE';
+    const url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+    Linking.openURL(url);
+  };
 
+  const callPhoneNumber = () => {
+    // Llamar al número de teléfono
+    const phoneNumber = '+576044212500';
+    Linking.openURL(`tel:${phoneNumber}`);
+  };
+
+  const openWhatsApp = () => {
+    // Abrir WhatsApp con el número
+    const phoneNumber = '+573007358435';
+    Linking.openURL(`https://wa.me/${phoneNumber}`);
+  };
+
+  const sendEmail = () => {
+    // Enviar un correo electrónico
+    const email = 'Novomatic@gmail.com';
+    Linking.openURL(`mailto:${email}`);
+  };
 
   return (
     <>
@@ -21,6 +46,7 @@ const Contacto = ({ navigation }: ContactoProps) => {
 
         <View style={styles.contentContact}>
 
+          <TouchableOpacity style={styles.contentContactOption} onPress={openGoogleMaps}>
           <View style={styles.contentContactOption}>
             <View style={styles.contactOption}>
               <Ionicons style={styles.contactOptionIcon} name="location" />
@@ -32,28 +58,34 @@ const Contacto = ({ navigation }: ContactoProps) => {
               </View>
             </View>
           </View>
+          </TouchableOpacity>
 
+          <TouchableOpacity style={styles.contentContactOption} onPress={callPhoneNumber}>
           <View style={styles.contentContactOption}>
             <View style={styles.contactOption}>
               <Ionicons style={styles.contactOptionIcon} name="call-sharp" />
               <View style={styles.contentTitleText}>
                 <Text style={styles.titleContactOption}>TELÉFONO{'\n'}DE CONTACTO</Text>
                 <Text style={styles.textContactOption}>604-4212500</Text>
-                <Text style={styles.textContactOption}>+57 3117795670</Text>
+                <Text style={styles.textContactOption}>3117795670</Text>
               </View>
             </View>
           </View>
+          </TouchableOpacity>
 
+          <TouchableOpacity style={styles.contentContactOption} onPress={openWhatsApp}>
           <View style={styles.contentContactOption}>
             <View style={styles.contactOption}>
               <Ionicons style={styles.contactOptionIcon} name="logo-whatsapp" />
               <View style={styles.contentTitleText}>
                 <Text style={styles.titleContactOption}>WHATSAPP</Text>
-                <Text style={styles.textContactOption}>+57 3117795670</Text>
+                <Text style={styles.textContactOption}>3007358435</Text>
               </View>
             </View>
           </View>
+          </TouchableOpacity>
 
+          <TouchableOpacity style={styles.contentContactOption} onPress={sendEmail}>
           <View style={styles.contentContactOption}>
             <View style={styles.contactOption}>
               <Ionicons style={styles.contactOptionIcon} name="mail" />
@@ -63,10 +95,11 @@ const Contacto = ({ navigation }: ContactoProps) => {
               </View>
             </View>
           </View>
+          </TouchableOpacity>
 
         </View>
 
-      </View >
+      </View>
     </>
   );
 };
