@@ -23,19 +23,19 @@ const Contacto = ({ navigation }: ContactoProps) => {
 
   const callPhoneNumber = () => {
     // Llamar al número de teléfono
-    const phoneNumber = '+576044212500';
+    const phoneNumber = '6044212500';
     Linking.openURL(`tel:${phoneNumber}`);
   };
 
   const openWhatsApp = () => {
     // Abrir WhatsApp con el número
-    const phoneNumber = '+573007358435';
+    const phoneNumber = '3024912446';
     Linking.openURL(`https://wa.me/${phoneNumber}`);
   };
 
   const sendEmail = () => {
     // Enviar un correo electrónico
-    const email = 'Novomatic@gmail.com';
+    const email = 'novomatic@gmail.com';
     Linking.openURL(`mailto:${email}`);
   };
 

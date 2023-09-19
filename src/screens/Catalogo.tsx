@@ -22,7 +22,7 @@ type Maquina = {
 };
 
 const Catalogo = ({ navigation }: CatalogoProps) => {
-  const initialUrl = 'https://novoticp1.onrender.com/api/producto/obtenerProducto';
+  const initialUrl = 'https://novoticp2.onrender.com/api/producto/obtenerProducto';
  
   const [searchTerm, setSearchTerm] = useState('');
   const [allCharacters, setAllCharacters] = useState<Maquina[]>([]);
@@ -83,7 +83,7 @@ const Catalogo = ({ navigation }: CatalogoProps) => {
     ) : (
       filteredCharacters.map((character, index) => (
         <View key={index} style={styles.cardContainer}>
-          <Image source={{ uri: `https://novoticp1.onrender.com/api/producto/obtener-imagen-producto/${character._id}` }} style={styles.cardImage} />
+          <Image source={{ uri: `https://novoticp2.onrender.com/api/producto/obtener-imagen-producto/${character._id}` }} style={styles.cardImage} />
           <Text style={styles.cardText}>{character.nombre}</Text>
           {/* <Text style={styles.cardDescription}> Estado: {character.estado}</Text> */}
           <Text style={styles.cardDescription}> Referencia: {character.referencia}</Text>
@@ -131,13 +131,13 @@ const styles = StyleSheet.create({
   cardText: {
     fontSize: 24,
     color: '#666',
-    padding: 20,
+    padding: 18,
     textAlign: 'justify'
   },
   cardDescription: {
     fontSize: 16,
     color: '#666',
-    padding: 20,
+    padding: 15,
     textAlign: 'justify',
   },
   searchContainer: {
